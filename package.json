@@ -1,0 +1,11 @@
+{
+  "name": "hyperscan.js",
+  "version": "0.0.1",
+  "description": "A deductive regex database for highly efficient pattern matching using hyperscan",
+  "main": "hyperscan.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "CBenni",
+  "license": "MIT"
+}
