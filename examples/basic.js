@@ -1,13 +1,13 @@
-import hyperscan from '../hyperscan'
+const hyperscan = require('../hyperscan');
 
-var db = hyperscan.hsCompile("Wo.*");
-console.log("Database info: "+hyperscan.hsDatabaseInfo(db));
-var data = "Hello World!";
-hyperscan.hsScan(db, data, function(id, from, to){
-	if(id !== null) {
-		var str = data.slice(from, to);
-		console.log(`Match found! id: ${id}, from: ${from}, to: ${to}, string: ${str}`)
-	} else {
-		console.log("No match found.");
-	}
-})
+const db = hyperscan.hsCompile('Wo.*');
+console.log(`Database info: ${hyperscan.hsDatabaseInfo(db)}`);
+const data = 'Hello World!';
+hyperscan.hsScan(db, data, (id, from, to) => {
+  if (id !== null) {
+    const str = data.slice(from, to);
+    console.log(`Match found! id: ${id}, from: ${from}, to: ${to}, string: ${str}`);
+  } else {
+    console.log('No match found.');
+  }
+});

@@ -1,7 +1,9 @@
-var ref = require('ref');
-var r = ref.refType;
-var ffi = require('ffi');
-var Struct = require('ref-struct');
+const ref = require('ref');
+
+const r = ref.refType;
+const ffi = require('ffi');
+const Struct = require('ref-struct');
+const ArrayType = require('ref-array');
 /**
  * Compile flag: Set case-insensitive matching.
  *
@@ -9,7 +11,7 @@ var Struct = require('ref-struct');
  * The expression may still use PCRE tokens (notably `(?i)` and
  * `(?-i)`) to switch case-insensitive matching on and off.
  */
-export const HS_FLAG_CASELESS = 1;
+const HS_FLAG_CASELESS = 1;
 
 /**
  * Compile flag: Matching a `.` will not exclude newlines.
@@ -19,7 +21,7 @@ export const HS_FLAG_CASELESS = 1;
  * token does not match newline characters by default, so without this flag the
  * `.` token will not cross line boundaries.
  */
-export const HS_FLAG_DOTALL = 2;
+const HS_FLAG_DOTALL = 2;
 
 /**
  * Compile flag: Set multi-line anchoring.
@@ -30,7 +32,7 @@ export const HS_FLAG_DOTALL = 2;
  * stream, and the `$` token will only ever match at the end of a stream within
  * the guidelines of the PCRE specification.
  */
-export const HS_FLAG_MULTILINE = 4;
+const HS_FLAG_MULTILINE = 4;
 
 /**
  * Compile flag: Set single-match only mode.
@@ -51,7 +53,7 @@ export const HS_FLAG_MULTILINE = 4;
  * Note: The use of this flag in combination with @ref HS_FLAG_SOM_LEFTMOST
  * is not currently supported.
  */
-export const HS_FLAG_SINGLEMATCH = 8;
+const HS_FLAG_SINGLEMATCH = 8;
 
 /**
  * Compile flag: Allow expressions that can match against empty buffers.
@@ -63,7 +65,7 @@ export const HS_FLAG_SINGLEMATCH = 8;
  * compile one is made. Using this flag will force the compiler to allow such
  * an expression.
  */
-export const HS_FLAG_ALLOWEMPTY = 16;
+const HS_FLAG_ALLOWEMPTY = 16;
 
 /**
  * Compile flag: Enable UTF-8 mode for this expression.
@@ -73,7 +75,7 @@ export const HS_FLAG_ALLOWEMPTY = 16;
  * library that has been compiled with one or more patterns using this flag are
  * undefined.
  */
-export const HS_FLAG_UTF8 = 32;
+const HS_FLAG_UTF8 = 32;
 
 /**
  * Compile flag: Enable Unicode property support for this expression.
@@ -83,7 +85,7 @@ export const HS_FLAG_UTF8 = 32;
  * well as the POSIX character classes. It is only meaningful in conjunction
  * with @ref HS_FLAG_UTF8.
  */
-export const HS_FLAG_UCP = 64;
+const HS_FLAG_UCP = 64;
 
 /**
  * Compile flag: Enable prefiltering mode for this expression.
@@ -111,7 +113,7 @@ export const HS_FLAG_UCP = 64;
  * Note: The use of this flag in combination with @ref HS_FLAG_SOM_LEFTMOST
  * is not currently supported.
  */
-export const HS_FLAG_PREFILTER = 128;
+const HS_FLAG_PREFILTER = 128;
 
 /**
  * Compile flag: Enable leftmost start of match reporting.
@@ -123,27 +125,27 @@ export const HS_FLAG_PREFILTER = 128;
  * Enabling this behaviour may reduce performance and increase stream state
  * requirements in streaming mode.
  */
-export const HS_FLAG_SOM_LEFTMOST = 256;
+const HS_FLAG_SOM_LEFTMOST = 256;
 
 /**
  * Compiler mode flag: Block scan (non-streaming) database.
  */
-export const HS_MODE_BLOCK = 1;
+const HS_MODE_BLOCK = 1;
 
 /**
  * Compiler mode flag: Alias for @ref HS_MODE_BLOCK.
  */
-export const HS_MODE_NOSTREAM = 1;
+const HS_MODE_NOSTREAM = 1;
 
 /**
  * Compiler mode flag: Streaming database.
  */
-export const HS_MODE_STREAM = 2;
+const HS_MODE_STREAM = 2;
 
 /**
  * Compiler mode flag: Vectored scanning database.
  */
-export const HS_MODE_VECTORED = 4;
+const HS_MODE_VECTORED = 4;
 
 /**
  * Compiler mode flag: use full precision to track start of match offsets in
@@ -156,7 +158,7 @@ export const HS_MODE_VECTORED = 4;
  * One of the SOM_HORIZON modes must be selected to use the @ref
  * HS_FLAG_SOM_LEFTMOST expression flag.
  */
-export const HS_MODE_SOM_HORIZON_LARGE = 1 << 24;
+const HS_MODE_SOM_HORIZON_LARGE = 1 << 24;
 
 /**
  * Compiler mode flag: use medium precision to track start of match offsets in
@@ -169,7 +171,7 @@ export const HS_MODE_SOM_HORIZON_LARGE = 1 << 24;
  * One of the SOM_HORIZON modes must be selected to use the @ref
  * HS_FLAG_SOM_LEFTMOST expression flag.
  */
-export const HS_MODE_SOM_HORIZON_MEDIUM = 1 << 25;
+const HS_MODE_SOM_HORIZON_MEDIUM = 1 << 25;
 
 /**
  * Compiler mode flag: use limited precision to track start of match offsets in
@@ -182,7 +184,7 @@ export const HS_MODE_SOM_HORIZON_MEDIUM = 1 << 25;
  * One of the SOM_HORIZON modes must be selected to use the @ref
  * HS_FLAG_SOM_LEFTMOST expression flag.
  */
-export const HS_MODE_SOM_HORIZON_SMALL = 1 << 26;
+const HS_MODE_SOM_HORIZON_SMALL = 1 << 26;
 
 /*
 typedef struct hs_platform_info {
@@ -212,11 +214,11 @@ typedef struct hs_platform_info {
     unsigned long long reserved2;
 } hs_platform_info_t;
 */
-var hsPlatformInfo = Struct({
-	"tune": "uint",
-	"cpu_features": "ulonglong", // could use a ref-bitfield here, but no need to atm.
-	"reserved1": "ulonglong",
-	"reserved2": "ulonglong"
+const hsPlatformInfo = Struct({
+  tune: 'uint',
+  cpu_features: 'ulonglong', // could use a ref-bitfield here, but no need to atm.
+  reserved1: 'ulonglong',
+  reserved2: 'ulonglong'
 });
 
 /*
@@ -234,9 +236,9 @@ struct hs_database {
 };
 */
 // we cannot (and wont) make any attempt at deseriaizing databases
-var hsDatabase = r(ref.types.void);
+const hsDatabase = r(ref.types.void);
 // same goes for scratch
-var hsScratch = r(ref.types.void);
+const hsScratch = r(ref.types.void);
 
 /**
  * Definition of the match event callback function type.
@@ -260,7 +262,7 @@ var hsScratch = r(ref.types.void);
  * example, scanning a different database in a new stream and with new scratch
  * space), but reusing data structures like stream state and/or scratch space
  * will produce undefined behavior.
- * 
+ *
  * It will be called with a single argument 'null' if no matches are found in a
  * particular data set.
  *
@@ -298,20 +300,18 @@ var hsScratch = r(ref.types.void);
  *      subsequent calls to @ref hs_scan_stream() for that stream will
  *      immediately return with @ref HS_SCAN_TERMINATED.
  */
-function matchEventHandler (id,from,to,flags,context){}
+function matchEventHandler(id, from, to, flags, context) {} // eslint-disable-line no-unused-vars
 
 /**
  * Creates a hyperscan match event handler
  * @param {matchEventHandler} callback
  * @returns {ffi.Callback} The generated callback
  */
-export function hsMatchEventHandler(callback) {
-	return ffi.Callback("int", ["uint", "uint64", "uint64", "uint", r(ref.types.void)], callback);
+function hsMatchEventHandler(callback) {
+  return ffi.Callback('int', ['uint', 'uint64', 'uint64', 'uint', r(ref.types.void)], callback);
 }
 
 
-								   
-								   
 /**
 @typedef hs_compile_error {
     **
@@ -327,47 +327,65 @@ export function hsMatchEventHandler(callback) {
     int expression;
 } hs_compile_error_t;
 */
-var hsCompileError = Struct({
-	"message": "string",
-	"expression": "int"
+const hsCompileError = Struct({
+  message: 'string',
+  expression: 'int'
 });
 
 
-
-
-var hyperscan = ffi.Library('libhs.so', {
-//	hs_error_t hs_compile(
-//		const char * expression, 
-//		unsigned int flags, 
-//		unsigned int mode, 
-//		const hs_platform_info_t * platform, 
-//		hs_database_t ** db, 
-//		hs_compile_error_t ** error)
-	"hs_compile": ["int", [
-					"string" /* expression */, 
-					"uint" /* flags */, 
-					"uint" /* mode */,
-					r(hsPlatformInfo) /* platform */,
-					r(hsDatabase) /* db */,
-					r(r(hsCompileError)) /*  error */
-				]],
-	"hs_scan": ["int", [
-					hsDatabase /* db */,
-					"string" /* data */,
-					"uint" /* length */,
-					"uint" /* flags */,
-					hsScratch /* scratch */,
-					"pointer" /* onEvent */,
-					r(ref.types.void) /* context */
-				]],
-	"hs_alloc_scratch": ["int", [
-					hsDatabase /* db */,
-					r(hsScratch) /* scratch */
-				]],
-	"hs_database_info": ["int", [
-					hsDatabase /* db */,
-					r(ref.types.CString) /* info */
-				]]
+const hyperscan = ffi.Library('libhs.so', {
+//  hs_error_t hs_compile(
+//   const char * expression,
+//   unsigned int flags,
+//   unsigned int mode,
+//   const hs_platform_info_t * platform,
+//   hs_database_t ** db,
+//   hs_compile_error_t ** error)
+  hs_compile: ['int', [
+    'string' /* expression */,
+    'uint' /* flags */,
+    'uint' /* mode */,
+    r(hsPlatformInfo) /* platform */,
+    r(hsDatabase) /* db */,
+    r(r(hsCompileError)) /*  error */
+  ]],
+  /*
+  hs_error_t hs_compile_multi(const char *const * expressions,
+    const unsigned int * flags,
+    const unsigned int * ids,
+    unsigned int elements,
+    unsigned int mode,
+    const hs_platform_info_t * platform,
+    hs_database_t ** db,
+    hs_compile_error_t ** error)
+  */
+  hs_compile_multi: ['int', [
+    ArrayType('string') /* expressions */,
+    ArrayType('uint') /* flags */,
+    ArrayType('uint') /* ids */,
+    'uint' /* elements */,
+    'uint' /* mode */,
+    r(hsPlatformInfo) /* platform */,
+    r(hsDatabase) /* db */,
+    r(r(hsCompileError)) /*  error */
+  ]],
+  hs_scan: ['int', [
+    hsDatabase /* db */,
+    'string' /* data */,
+    'uint' /* length */,
+    'uint' /* flags */,
+    hsScratch /* scratch */,
+    'pointer' /* onEvent */,
+    r(ref.types.void) /* context */
+  ]],
+  hs_alloc_scratch: ['int', [
+    hsDatabase /* db */,
+    r(hsScratch) /* scratch */
+  ]],
+  hs_database_info: ['int', [
+    hsDatabase /* db */,
+    r(ref.types.CString) /* info */
+  ]]
 });
 /*
 var dbPtrPtr = ref.alloc(r(hsDatabase));
@@ -387,26 +405,69 @@ console.log("-------------------------")
  * @param {hsDatabase} db The database for which to allocate a scratch
  * @returns {hsScratch} Allocated scratch object
  */
-export function hsAllocScratch(db) {
-	var scratchPtrPtr = ref.alloc(r(hsScratch), ref.NULL);
-	var res = hyperscan.hs_alloc_scratch(db, scratchPtrPtr);
-	console.log(scratchPtrPtr);
-	return scratchPtrPtr.deref();
+function hsAllocScratch(db) {
+  const scratchPtrPtr = ref.alloc(r(hsScratch), ref.NULL);
+  const res = hyperscan.hs_alloc_scratch(db, scratchPtrPtr);
+  console.log('Scratch allocation result:', res);
+  // console.log(scratchPtrPtr);
+  return scratchPtrPtr.deref();
 }
 
-/** Compile a single pattern into a pattern database
-	@return {hsDatabase} The newly generated database
-*/
-export function hsCompile(pattern, flags, mode) {
-	var dbPtrPtr = ref.alloc(r(hsDatabase));
-	var errPtrPtr = ref.alloc(r(hsCompileError));
-	var res = hyperscan.hs_compile(pattern, flags || (HS_FLAG_CASELESS | HS_FLAG_SOM_LEFTMOST), mode || (HS_MODE_BLOCK), ref.NULL, dbPtrPtr, errPtrPtr);
-	if(res != 0) {
-		var err = errPtrPtr.deref().deref();
-		throw new Error(`Pattern compilation error: ${err.message} for pattern '${pattern}' with the ID ${err.expression}`);
-	} else {
-		return dbPtrPtr.deref();
-	}
+/**
+ * Compiles a single pattern into a database
+ * @param {String} pattern A pattern to compile
+ * @param {int} flags Matching flags (see HS_FLAG_...)
+ * @param {int} mode Match modes (see HS_MODE_...)
+ * @return {hsDatabase} The newly generated database
+ */
+function hsCompile(pattern, flags, mode) {
+  const dbPtrPtr = ref.alloc(r(hsDatabase));
+  const errPtrPtr = ref.alloc(r(hsCompileError));
+  const res = hyperscan.hs_compile(pattern, flags || (HS_FLAG_CASELESS | HS_FLAG_SOM_LEFTMOST), mode || (HS_MODE_BLOCK), ref.NULL, dbPtrPtr, errPtrPtr);
+  if (res !== 0) {
+    const err = errPtrPtr.deref().deref();
+    throw new Error(`Pattern compilation error: ${err.message} for pattern '${pattern}' with the ID ${err.expression}`);
+  } else {
+    return dbPtrPtr.deref();
+  }
+}
+
+/**
+ * Compile multiple patterns into a pattern database
+ * @param {Array<{pattern: String, flags: int}>} patterns A list of strings or objects {pattern: String, flags: int} specifying the patterns and flags to use for each regex.
+ * defaultFlags is used for each pattern that doesnt have a flag set explicitely.
+ * @param {int} defaultFlags Flags (see HS_FLAG_...) to be used for patterns that do not explicitely overwrite the flags.
+ * @param {int} mode Matching modes (see HS_MODE_...)
+ */
+function hsCompileMany(patterns, defaultFlags, mode) {
+  const dbPtrPtr = ref.alloc(r(hsDatabase));
+  const errPtrPtr = ref.alloc(r(hsCompileError));
+
+  const patternList = [];
+  const flagList = [];
+  const idList = [];
+
+  defaultFlags = defaultFlags || (HS_FLAG_CASELESS | HS_FLAG_SOM_LEFTMOST);
+  patterns.forEach((value, index) => {
+    if (!value) throw new Error('Invalid pattern', value);
+    if (typeof (value) === 'string') {
+      patternList.push(value);
+      flagList.push(defaultFlags);
+    } else {
+      if (!value.pattern || typeof (value.pattern) !== 'string') throw new Error('Invalid pattern', value.pattern);
+      patternList.push(value.pattern);
+      flagList.push(value.pattern || defaultFlags);
+    }
+    idList.push(index);
+  });
+
+  const res = hyperscan.hs_compile_multi(patternList, flagList, idList, patterns.length, mode || (HS_MODE_BLOCK), ref.NULL, dbPtrPtr, errPtrPtr);
+  if (res !== 0) {
+    const err = errPtrPtr.deref().deref();
+    throw new Error(`Pattern compilation error: ${err.message} for pattern '${pattern}' with the ID ${err.expression}`);
+  } else {
+    return dbPtrPtr.deref();
+  }
 }
 
 /**
@@ -415,69 +476,92 @@ export function hsCompile(pattern, flags, mode) {
  * @param {String} data The string to scan
  * @param {matchEventHandler} callback The callback to run when a match is found
  * @param {hsScratch} scratch A scratch to use for matching
- * @param {*} context 
+ * @param {*} context
  */
-export function hsScan(db, data, callback, scratch, context) {
-	scratch = scratch || hsAllocScratch(db);
-	var matchFound = false;
-	var res = hyperscan.hs_scan(db, data, Buffer.byteLength(data), 0, scratch, hsMatchEventHandler(function(id, fromIdx, toIdx, flags, contextPtr){
-		//console.log(`Match found! id: ${id}, from: ${fromIdx}, to: ${toIdx}, flags: ${flags}, context: ${contextPtr}`) 
-		//console.log(contextPtr);
-		matchFound = true;
-		callback(id, fromIdx, toIdx, flags, contextPtr);
-		return 0;
-	}), context);
-	//console.log("hs_scan result: "+res);
-	if(!matchFound) callback(null);
+function hsScan(db, data, callback, scratch, context) {
+  scratch = scratch || hsAllocScratch(db);
+  let matchFound = false;
+  const res = hyperscan.hs_scan(db, data, Buffer.byteLength(data), 0, scratch, hsMatchEventHandler((id, fromIdx, toIdx, flags, contextPtr) => {
+    // console.log(`Match found! id: ${id}, from: ${fromIdx}, to: ${toIdx}, flags: ${flags}, context: ${contextPtr}`)
+    // console.log(contextPtr);
+    matchFound = true;
+    callback(id, fromIdx, toIdx, flags, contextPtr);
+    return 0;
+  }), context);
+  console.log(`hs_scan result: ${res}`);
+  if (!matchFound) callback(null);
 }
 
 /**
  * Not implemented yet.
  */
 function hsScanVector(db, data, length, count, flags, onMatch, scratch) {
-	
+
 }
 
 /**
  * Not implemented yet.
  */
 function hsScanStream() {
-	
+
 }
 
 /**
  * Returns information about a database
- * @param {hsDatabase} db 
+ * @param {hsDatabase} db
  */
-export function hsDatabaseInfo(db) {
-	var info = ref.alloc(r(ref.types.CString));
-	var res = hyperscan.hs_database_info(db, info);
-	// console.log("Info result: "+res);
-	return info.deref().readCString(0);
+function hsDatabaseInfo(db) {
+  const info = ref.alloc(r(ref.types.CString));
+  const res = hyperscan.hs_database_info(db, info);
+  // console.log("Info result: "+res);
+  return info.deref().readCString(0);
 }
 
 /**
- * 
- * @param {hsDatabase} db 
- * @param {String} data 
- * @param {matchEventHandler} onMatch 
- * @param {hsScratch} scratch 
+ *
+ * @param {hsDatabase} db
+ * @param {String} data
+ * @param {matchEventHandler} onMatch
+ * @param {hsScratch} scratch
  */
-export function hsScanAsync(db, data, onMatch, scratch) {
-	scratch = scratch || hsAllocScratch(db);
-	var matchFound = false;
-	return new Promise((r,j)=>{
-		var res = hyperscan.hs_scan.async(db, data, Buffer.byteLength(data), 0, scratch, hsMatchEventHandler(function(id, fromIdx, toIdx, flags, contextPtr){
-			//console.log(`Match found! id: ${id}, from: ${fromIdx}, to: ${toIdx}, flags: ${flags}, context: ${contextPtr}`) 
-			//console.log(contextPtr);
-			matchFound = true;
-			onMatch(id, fromIdx, toIdx, flags, contextPtr);
-			return 0;
-		}), null, function(err, res) {
-			if(err) j(err);
-			else {
-				r(res);
-			}
-		});
-	});
+function hsScanAsync(db, data, onMatch, scratch) {
+  scratch = scratch || hsAllocScratch(db);
+  let matchFound = false;
+  return new Promise((r, j) => {
+    const res = hyperscan.hs_scan.async(db, data, Buffer.byteLength(data), 0, scratch, hsMatchEventHandler((id, fromIdx, toIdx, flags, contextPtr) => {
+      // console.log(`Match found! id: ${id}, from: ${fromIdx}, to: ${toIdx}, flags: ${flags}, context: ${contextPtr}`)
+      // console.log(contextPtr);
+      matchFound = true;
+      onMatch(id, fromIdx, toIdx, flags, contextPtr);
+      return 0;
+    }), null, (err, res) => {
+      if (err) j(err);
+      else {
+        r(res);
+      }
+    });
+  });
 }
+
+module.exports = {
+  HS_FLAG_ALLOWEMPTY,
+  HS_FLAG_CASELESS,
+  HS_FLAG_DOTALL,
+  HS_FLAG_MULTILINE,
+  HS_FLAG_PREFILTER,
+  HS_FLAG_SINGLEMATCH,
+  HS_FLAG_SOM_LEFTMOST,
+  HS_FLAG_UCP,
+  HS_FLAG_UTF8,
+  HS_MODE_BLOCK,
+  HS_MODE_NOSTREAM,
+  HS_MODE_STREAM,
+  HS_MODE_VECTORED,
+  HS_MODE_SOM_HORIZON_LARGE,
+  HS_MODE_SOM_HORIZON_MEDIUM,
+  HS_MODE_SOM_HORIZON_SMALL,
+  hsCompile,
+  hsCompileMany,
+  hsScan,
+  hsScanAsync
+};
